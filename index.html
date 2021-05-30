@@ -25,6 +25,13 @@
     }
   </style>
 </head>
+<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS && TrackJS.install({
+    token: "d21e4fcee83543fc9a04d2f3ea085593"
+    // for more configuration options, see https://docs.trackjs.com
+  });
+</script>
 <body>
   <fieldset>
     <legend>Error Calculator</legend>
@@ -42,20 +49,27 @@
   </fieldset>
 
   <section id="error-btns">
-    <button>Console Log Demo</button>
-    <button>Console Error Demo</button>
-    <button>Console Dir</button>
-    <button>Console dirxml</button>
-    <button>Console Group Start</button>
-    <button>Console Group End</button>
-    <button>Console Table</button>
-    <button>Start Timer</button>
-    <button>End Timer</button>
-    <button>Console Trace</button>
-    <button>Trigger a Global Error</button>
+    <button class="con-log">Console Log Demo</button>
+    <button class="con-err">Console Error Demo</button>
+    <button class="con-dir">Console Dir</button>
+    <button class="con-dirxml">Console dirxml</button>
+    <button class="con-group-start">Console Group Start</button>
+    <button class="con-group-end">Console Group End</button>
+    <button class="con-table">Console Table</button>
+    <button class="start-time">Start Timer</button>
+    <button class="end-time">End Timer</button>
+    <button class="con-trace">Console Trace</button>
+    <button class="glob-err">Trigger a Global Error</button>
   </section>
 
   <script>
+    window.TrackJS && TrackJS.install({
+        token: "d21e4fcee83543fc9a04d2f3ea085593"
+        // for more configuration options, see https://docs.trackjs.com
+      });
+    TrackJS.track('Testing TrackJS!');
+
+    
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
       let output = document.querySelector('output');
@@ -67,6 +81,137 @@
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
     // TODO - Make buttons functional
+    function consoleLog(){
+      console.log("Demo");
+    }
+    document.querySelector('.con-log').setAttribute('onclick', 'consoleLog()');
+
+    function consoleErr(){
+      console.error("I'm sorry, Dave. I'm afraid I can't do that.");
+      console.error("MORE ERRORS!");
+      console.error("For reals!");
+    }
+    document.querySelector('.con-err').setAttribute('onclick', 'consoleErr()');
+    document.querySelector('.con-err').setAttribute('onerror', 'catchErr()');
+
+    function consoleDir(){
+      console.dir(document.head);
+    }
+    document.querySelector('.con-dir').setAttribute('onclick', 'consoleDir()');
+
+    function consoleDirXml(){
+      console.dirxml(document);
+    }
+    document.querySelector('.con-dirxml').setAttribute('onclick', 'consoleDirXml()');
+
+    function consoleGrpStart(){
+      const label = 'some text here';
+      console.group(label);
+    }
+    document.querySelector('.con-group-start').setAttribute('onclick', 'consoleGrpStart()');
+
+    function consoleGrpEnd(){
+      const label = 'Some names';
+      console.group(label);
+      console.info('Joe');
+      console.info('Bob');
+      console.info('Dylan');
+      console.info('Randy');
+      console.groupEnd(label);
+    };
+    document.querySelector('.con-group-end').setAttribute('onclick', 'consoleGrpEnd()');
+
+    function consoleTable(){
+      console.table([
+        {
+          first: "Trai",
+          last: "Pham",
+        },
+        {
+          first: "Dennis",
+          last: "Nguyen"
+        },
+        {
+          first: "Johnson",
+          last: "Nguyen"
+        }
+      ]);
+    };
+    document.querySelector('.con-table').setAttribute('onclick', 'consoleTable()');
+
+    function startTime(){
+      console.time();
+      for(let i =0; i < 20000; i++){
+        let cube = i ** 3;
+      }
+      console.log("Timer has started");
+    };
+    document.querySelector('.start-time').setAttribute('onclick', 'startTime()');
+
+    function endTime(){
+      console.timeEnd();
+    };
+    document.querySelector('.end-time').setAttribute('onclick', 'endTime()');
+
+    function consoleTrace(){
+      const func1 = () => { func2(); };
+      const func2 = () => { func3(); };
+      const func3 = () => { func4(); };
+      const func4 = () => { func5(); };
+      const func5 = () => { console.trace(); };
+      func1();
+    }
+    document.querySelector('.con-trace').setAttribute('onclick', 'consoleTrace()');
+
+    function globalErr(){
+      let a = 2;
+      let b = 3;
+      let text ="a is not > b"
+      console.assert(a > b, { a, b, text });
+      consoel.error();
+    }
+    document.querySelector('.glob-err').setAttribute('onclick', 'globalErr()');
+
+    class custError extends Error {
+      constructor(message){
+        super(message);
+        this.name = "Custom Error";
+      }
+    }
+
+
+    try {
+      x;
+      let y= 4;
+      let result = x + y; 
+      window.onload = (event) =>{
+        console.log(result);
+      }
+    } catch (err) {
+        console.error(err);
+    } finally {
+        let a= 1;
+        let b= 2;
+        console.log("Answer: ", a+b);
+    }
+
+    try{
+      throw new custError("THERE IS SOMETHING WRONG WITH YOUR CODE! USING CUSTOM ERROR");
+    } catch(err) {
+      console.error(err)
+      alert(err.message);
+    }
+
+    window.onerror = function(msg){
+      console.log("Caught this error: ", msg);
+      return false;
+    }
+    function catchErr(){
+      if (window.onerror) {
+        console.log("Caught an erorr using window.onerror");
+      }
+    }
+    catchErr();
   </script>
 </body>
 </html>
